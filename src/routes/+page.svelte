@@ -13,10 +13,6 @@
   });
   const { status } = game;
 
-  const handleFilledWord = (event: CustomEvent<{ word: string }>) => {
-    game.checkFilledWord(event.detail.word);
-  };
-
   onMount(() => {
     game.start();
   });
@@ -25,7 +21,7 @@
 <article>
   <WordScramblle />
   {#if $status === GAME_STATUS.PLAYING}
-    <Game {MAX_TRIES} {game} on:filled={handleFilledWord} />
+    <Game {MAX_TRIES} {game} />
   {/if}
 </article>
 
@@ -47,6 +43,7 @@
   @media screen and (max-width: 500px) {
     article {
       max-width: 90%;
+      padding: 1.25rem;
     }
   }
 </style>

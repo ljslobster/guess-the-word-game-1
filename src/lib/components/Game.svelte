@@ -1,38 +1,44 @@
 <script lang="ts">
+  import { checkInputsIsFilled, cleanInputs, passFocusInput } from "$lib/utils";
+  import { onMount } from "svelte";
   import type { Game } from "../../models/game.model";
   import Tries from "./Tries.svelte";
   import WordInput from "./WordInput.svelte";
-  import { createEventDispatcher, onMount } from "svelte";
 
   export let game: Game, MAX_TRIES: number;
 
   let inputs: HTMLInputElement[];
+  let currentWord: { normal: string; scrambled: string };
+  let currentWordLength: number;
+  let currentWordArray: string[];
 
   let form: HTMLFormElement;
 
-  const dispatch = createEventDispatcher();
-  const { tries, mistakes, currentWord: currentWordStore, reset, resetAll, changeWord, addMistake } = game;
-  $: currentWord = $currentWordStore ?? { normal: "", scrambled: "" };
+  const {
+    tries,
+    mistakes,
+    currentWord: currentWordStore,
+    checkFilledWord,
+    reset,
+    resetAll,
+    changeWord,
+    addMistake,
+  } = game;
 
-  $: currentWordLength =
-    currentWord?.normal.length === 0 ? 6 : currentWord?.normal.length;
-  $: currentWordArray =
-    currentWord?.normal !== ""
-      ? currentWord.normal.split("")
-      : Array(6).fill("");
+  $: {
+    currentWord = $currentWordStore ?? { normal: "", scrambled: "" };
+    currentWordLength =
+      currentWord?.normal.length === 0 ? 6 : currentWord?.normal.length;
+    currentWordArray =
+      currentWord?.normal !== ""
+        ? currentWord.normal.split("")
+        : Array(6).fill("");
+  }
 
   onMount(() => {
     inputs = Array.from(form.querySelectorAll("input"));
     inputs[0]?.focus();
   });
-
-  const cleanInputs = () => {
-    inputs.forEach((input) => {
-      input.value = "";
-    });
-
-    inputs[0]?.focus();
-  };
 
   const handleClick = () => {
     changeWord();
@@ -40,9 +46,8 @@
 
   const handleReset = () => {
     reset();
-    cleanInputs();
+    cleanInputs(inputs);
   };
-
 
   const handleFilled = () => {
     let wordInput = "";
@@ -51,22 +56,9 @@
       wordInput += input.value;
     });
 
-    cleanInputs();
-    dispatch("filled", { word: wordInput });
-  };
-
-  const passFocus = ({ input }: { input: HTMLInputElement }) => {
-    const index = inputs.indexOf(input);
-
-    inputs[index + 1]?.focus();
-  };
-
-  const checkInputs = () => {
-    let allFilled = inputs.every((input) => input.value !== "");
-
-    if (allFilled) {
-      handleFilled();
-    }
+    cleanInputs(inputs);
+    checkFilledWord(wordInput);
+    inputs[0]?.focus();
   };
 
   const handleInput = (
@@ -76,12 +68,14 @@
       letter: string;
     }>
   ) => {
-    const { value, letter, input } = event.detail;
+    const { value, input } = event.detail;
 
     if (value !== "" && currentWord.normal !== "") {
-      passFocus({ input });
-
-      checkInputs();
+      passFocusInput(inputs, input);
+      const isFilled = checkInputsIsFilled(inputs);
+      if (isFilled) {
+        handleFilled();
+      }
     }
   };
 
@@ -89,11 +83,12 @@
     const { value } = event.detail;
 
     addMistake(value);
-  }
+  };
 
   $: if ($mistakes.length === MAX_TRIES) {
-    cleanInputs();
-    resetAll()
+    cleanInputs(inputs);
+    resetAll();
+    inputs[0]?.focus();
   }
 </script>
 
@@ -150,7 +145,7 @@
     padding: 0 1.6rem;
     display: flex;
     flex-direction: column;
-    gap: .6rem;
+    gap: 0.6rem;
     justify-content: center;
     align-items: center;
   }
@@ -188,13 +183,12 @@
     box-shadow: 0 4px 0 var(--color-purple);
     color: #fff;
     font-family: inherit;
+  }
+  button:hover {
+    opacity: 0.8;
+  }
 
-    &:hover {
-      opacity: 0.8;
-    }
-
-    &:active {
-      transform: scale(1.02);
-    }
+  button:active {
+    transform: scale(1.02);
   }
 </style>

@@ -45,6 +45,7 @@
 
 <div class:isnull>
   <input
+    data-testid="input"
     bind:this={input}
     on:focusin={handleFocusIn}
     on:focusout={handleFocusOut}
@@ -109,6 +110,14 @@
     }
     100% {
       opacity: 1;
+    }
+  }
+
+
+  @media screen and (max-width: 500px) {
+    input {
+      width: 40px;
+      height: 40px;
     }
   }
 </style>

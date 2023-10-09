@@ -47,7 +47,7 @@ export function createGame({
 
     unsubscribe();
 
-    reset();
+    resetAll();
     if (winned) {
       alert("🎉 Success");
     }

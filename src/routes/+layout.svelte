@@ -59,6 +59,8 @@
     --font-medium: 1.25rem;
     --font-small: 0.75rem;
     --font-button: 0.875rem;
+
+    --sm: 640px;
   }
 
   @font-face {
