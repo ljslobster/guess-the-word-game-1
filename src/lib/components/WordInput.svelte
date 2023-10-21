@@ -45,7 +45,6 @@
 
 <div class:isnull>
   <input
-    data-testid="input"
     bind:this={input}
     on:focusin={handleFocusIn}
     on:focusout={handleFocusOut}

@@ -9,6 +9,9 @@ describe("Game component", () => {
 
   it("should render", () => {
     render(Game);
+
+    const scrambledWord = screen.getByRole("h2");
+    expect(scrambledWord).toBeDefined();
   });
 
   it("should render 6 inputs", () => {

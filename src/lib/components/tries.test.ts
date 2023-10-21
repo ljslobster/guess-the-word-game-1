@@ -17,6 +17,9 @@ describe("Tries component", () => {
         maxTries
       }
     });
+
+    const triesText = screen.getByText("Tries");
+    expect(triesText).toBeDefined();
   })
 
   it("should render -maxTries spans", () => {
