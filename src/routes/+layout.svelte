@@ -20,7 +20,7 @@
 
 
 <svelte:head> 
-  <link rel="preload" href="/fonts/Outfit-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+  <link rel="preload" href="/fonts/Outfit-Regular.ttf" type="font/ttf" crossorigin="anonymous">
 </svelte:head>
 
 <div class:loaded class="guess__container" style="background-image: url('/bg-guess-the-word-small.png')">
