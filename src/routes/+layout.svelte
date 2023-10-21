@@ -18,11 +18,6 @@
   $: loaded = bgLoaded;
 </script>
 
-
-<svelte:head> 
-  <link rel="preload" href="/fonts/Outfit-Regular.ttf" type="font/ttf" crossorigin="anonymous">
-</svelte:head>
-
 <div class:loaded class="guess__container" style="background-image: url('/bg-guess-the-word-small.png')">
   <img class="guess__bg" src="/bg-guess-the-word.png" alt="Small background guess the word" loading="lazy" on:load={handleLoad} bind:this={bg}>
   <slot />
